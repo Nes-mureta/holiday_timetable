@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ profile.full_name }}!</h1>
+
+    <div>
+        <h2>Your Profile</h2>
+        {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" width="100">
+        {% else %}
+            <p>No profile picture uploaded.</p>
+        {% endif %}        <p>Level of Education: {{ profile.level_of_education }}</p>
+        <p>School Name: {{ profile.school_name }}</p>
+    </div>
+
+    <div>
+        <h2>Your Timetable</h2>
+        <!-- Placeholder for Timetable Display -->
+        <p>Your timetable will be displayed here.</p>
+    </div>
+
+    <div>
+        <h2>Upcoming Events</h2>
+        <!-- Placeholder for Calendar/Events -->
+        <p>Your upcoming events will be displayed here.</p>
+    </div>
+</body>
+</html>

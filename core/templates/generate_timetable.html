@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Timetable</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 16px;
+            text-align: left;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Your Generated Timetable</h1>
+
+    {% if timetable_entries %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    {% for time in time_slots %}
+                        <th>{{ time }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for day in days %}
+                <tr>
+                    <td>{{ day }}</td>
+                    {% for time in time_slots %}
+                        <td>
+                            {% for entry in timetable_entries %}
+                                {% if entry.day == day and entry.time_slot == time %}
+                                    {{ entry.subject }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No timetable has been generated yet. Please input your subjects and generate one.</p>
+    {% endif %}
+    
+</body>
+</html>
