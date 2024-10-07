@@ -21,11 +21,35 @@
         th {
             background-color: #f2f2f2;
         }
+        #subjectForm {
+            display: none; /* Hide the form initially */
+        }
     </style>
+    <script>
+        function toggleForm() {
+            const form = document.getElementById('subjectForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none'; // Toggle visibility
+        }
+
+        function printTimetable() {
+            window.print(); // Call the print dialog
+        }
+    </script>
 </head>
 <body>
 
     <h1>Your Generated Timetable</h1>
+
+    <button onclick="toggleForm()">Generate Table</button>
+
+    <div id="subjectForm">
+        <form method="POST">
+            {% csrf_token %}
+            <label for="subjects">Subjects (comma-separated):</label><br>
+            <textarea id="subjects" name="subjects" rows="4" cols="50" placeholder="Enter subjects separated by commas"></textarea><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 
     {% if timetable_entries %}
         <table>
@@ -54,6 +78,11 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Buttons for actions -->
+        <button onclick="window.location.href='{% url 'delete_timetable' %}'">Delete Table</button>
+        <button onclick="printTimetable()">Print Timetable</button>
+
     {% else %}
         <p>No timetable has been generated yet. Please input your subjects and generate one.</p>
     {% endif %}

@@ -10,7 +10,7 @@ def custom_login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('profile')  # Redirect to the dashboard after login
+            return redirect('profile') 
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
@@ -20,7 +20,7 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')  # Redirect to the login page after successful registration
+            return redirect('login')  
     else:
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
@@ -28,26 +28,31 @@ def register(request):
 
 @login_required
 def profile(request):
-    profile = request.user.profile  # Access the logged-in user's profile
+    profile = request.user.profile 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')  # Redirect to the dashboard after saving profile
+            return redirect('dashboard') 
     else:
         form = ProfileForm(instance=profile)
     return render(request, 'profile.html', {'form': form})
 
 @login_required
 def dashboard(request):
-    # Fetch the user's profile
-    profile = Profile.objects.get(user=request.user)
+    timetable_entries = Timetable.objects.filter(user=request.user)
+    
+    # Organize timetable entries by day
+    entries_by_day = {}
+    for entry in timetable_entries:
+        if entry.day not in entries_by_day:
+            entries_by_day[entry.day] = []
+        entries_by_day[entry.day].append(entry)
 
     context = {
-        'profile': profile,
+        'entries_by_day': entries_by_day,
     }
     return render(request, 'dashboard.html', context)
-
 
 
 #table generation view
@@ -108,3 +113,8 @@ def generate_timetable(request):
         'time_slots': time_slots,
     }
     return render(request, 'generate_timetable.html', context)
+
+def delete_timetable(request):
+    # Clear existing timetables for the user
+    Timetable.objects.filter(user=request.user).delete()
+    return redirect('generate_timetable') 

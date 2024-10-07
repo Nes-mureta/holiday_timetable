@@ -4,6 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            position: relative; /* Enable absolute positioning for tooltip */
+        }
+        .tooltip {
+            display: none; /* Hide the tooltip by default */
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 10;
+            width: 200px;
+            left: 0;
+            top: 100%;
+        }
+        td:hover .tooltip {
+            display: block; /* Show tooltip on hover */
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome, {{ profile.full_name }}!</h1>
@@ -19,15 +47,32 @@
     </div>
 
     <div>
-        <h2>Your Timetable</h2>
-        <!-- Placeholder for Timetable Display -->
-        <p>Your timetable will be displayed here.</p>
-    </div>
-
-    <div>
         <h2>Upcoming Events</h2>
-        <!-- Placeholder for Calendar/Events -->
         <p>Your upcoming events will be displayed here.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Timetable</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day, entries in entries_by_day.items %}
+                <tr>
+                    <td>{{ day }}</td>
+                    <td>
+                        <!-- Tooltip to show timetable entries on hover -->
+                        <div class="tooltip">
+                            {% for entry in entries %}
+                                <p>{{ entry.time_slot }}: {{ entry.subject }}</p>
+                            {% endfor %}
+                        </div>
+                        Hover to see timetable
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
